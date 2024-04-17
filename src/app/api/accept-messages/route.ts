@@ -38,18 +38,17 @@ export async function POST(req: Request) {
           status: 401,
         }
       );
-
-      return Response.json(
-        {
-          success: true,
-          message: "user statis to accept message is successfully updated",
-          updatedUser,
-        },
-        {
-          status: 200,
-        }
-      );
     }
+    return Response.json(
+      {
+        success: true,
+        message: "user statis to accept message is successfully updated",
+        updatedUser,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("failed to update user status to accept message", error);
     return Response.json(
