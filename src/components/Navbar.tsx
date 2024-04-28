@@ -22,13 +22,9 @@ const Navbar = () => {
             <Button onClick={() => signOut()}>Logout</Button>
           </div>
         ) : (
-          <Button
-            variant="link"
-            onClick={() => redirect("/sign-in")}
-            className="text-white"
-          >
-            Login
-          </Button>
+          <Link href="/sign-in">
+            <Button className="w-full md:w-auto bg-slate-100 text-black" variant={'outline'}>Login</Button>
+          </Link>
         )}
       </div>
     </nav>

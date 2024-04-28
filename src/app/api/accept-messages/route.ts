@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     return Response.json(
       {
         success: true,
-        message: "user statis to accept message is successfully updated",
+        message: "user state to accept message is successfully updated",
         updatedUser,
       },
       {

@@ -5,7 +5,7 @@ export default async function Home() {
   await dbConnect()
   return (
     <div className="">
-      
+      nothing to show...
     </div>
   );
 }
