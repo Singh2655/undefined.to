@@ -15,6 +15,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,7 +48,7 @@ const Page = () => {
       })
     }
     if(result?.url){
-    router.replace('dashboard')
+    router.replace('/dashboard')
     }
   };
   return (
@@ -90,6 +91,14 @@ const Page = () => {
             <Button type="submit">Sign in</Button>
           </form>
         </Form>
+        <div className="text-center mt-4">
+          <p>
+            Not a member?{' '}
+            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

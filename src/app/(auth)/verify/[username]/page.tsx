@@ -19,6 +19,9 @@ const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof verifySchema>>({
     resolver: zodResolver(verifySchema),
+    defaultValues:{
+      code:""
+    }
   });
 
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
@@ -31,7 +34,7 @@ const Page = () => {
         title: "Success",
         description: response.data.message,
       });
-      router.replace("sign-in");
+      router.replace("/sign-in");
     } catch (error) {
       console.error("Error during verify-code:", error);
 
