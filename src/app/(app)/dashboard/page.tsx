@@ -53,7 +53,7 @@ const Page = () => {
     setIsLoading(true)
     try {
       const response=await axios.get('/api/get-messages')
-      setMessages(response.data.messages || [])
+      setMessages(response.data.message || [])
       if(refresh){
         toast({
           title:"Refreshed Messages",
@@ -163,7 +163,7 @@ const Page = () => {
       {messages.length > 0 ? (
         messages.map((message, index) => (
           <MessageCard
-            key={message._id}
+            key={index}
             message={message}
             onMessageDelete={handleDeleteMessage}
           />

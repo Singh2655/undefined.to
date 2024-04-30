@@ -22,6 +22,8 @@ import { X } from "lucide-react";
 import { Message } from "@/model/User";
 import { useToast } from "./ui/use-toast";
 import axios from "axios";
+import { cn } from "@/lib/utils";
+import dayjs from "dayjs"
 
 type MessageCardProps = {
   message: Message;
@@ -42,11 +44,13 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
     }
   }
   return (
-    <Card>
+    <Card className="card-bordered">
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle>{message.content}</CardTitle>
         <AlertDialog>
           <AlertDialogTrigger asChild>
+
             <Button variant="destructive">
               <X className="w-5 h-5" />
             </Button>
@@ -65,7 +69,10 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <CardDescription>Card Description</CardDescription>
+        </div>
+        <div className="text-sm">
+          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+        </div>
       </CardHeader>
     </Card>
   );
