@@ -45,6 +45,7 @@ import { Button } from "./ui/button";
 import { redirect } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
 import { Suspense } from "react";
+import Searchbar from "./Searchbar";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -61,6 +62,7 @@ const Navbar = () => {
           <a href="/" className="text-xl font-bold">
             Welcome to Undefined.to
           </a>
+          <Searchbar/>
         {status === "loading" ? (
           skeletonContent
         ) : session ? (

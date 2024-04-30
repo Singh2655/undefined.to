@@ -53,12 +53,16 @@ const Page = () => {
   const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(messageSchema),
+    defaultValues:{
+      content:""
+    }
   });
 
 const handleClick=(message:string)=>{
   form.setValue('content',message)
 }
-  const onSubmit = async (data: z.infer<typeof messageSchema>) => {
+  async function onSubmit(data: z.infer<typeof messageSchema>){
+    setIsLoading(true)
     try {
       const response = await axios.post<ApiResponse>("/api/send-messages", {
         ...data,
@@ -78,6 +82,9 @@ const handleClick=(message:string)=>{
           axiosError.response?.data.message ?? "Failed to send message",
         variant: "destructive",
       });
+    }
+    finally{
+      setIsLoading(false)
     }
   };
 
