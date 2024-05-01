@@ -5,7 +5,7 @@ import { User } from "next-auth";
 import mongoose from "mongoose";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
-export async function GET(
+export async function DELETE(
   req: Request,
   { params }: { params: { messageId: string } }
 ) {

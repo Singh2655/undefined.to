@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const newMessage={content,createdAt:new Date()}
+    const newMessage={content,createdAt:new Date(),isAnswered:false,answer:""}
 
     user.messages.push(newMessage as Message)
     await user.save()

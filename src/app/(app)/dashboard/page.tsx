@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import axios, { AxiosError } from "axios"
 import { Loader2, RefreshCcw } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -19,10 +20,23 @@ const Page = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setIsSwitchLoading] = useState(false)
-
+  const router=useRouter()
   const {toast}=useToast()
   const handleDeleteMessage=(messageId:string)=>{
+    console.log("this is messageId",messageId)
     setMessages(messages.filter((message)=>message.id!==messageId))
+    router.refresh()
+  }
+
+  const handleAnswerMessage=async(messageId:string,answer:string)=>{
+    try {
+      const response=await axios.post('/api/answer-message',{
+        messageId,
+        answer
+      })
+    } catch (error) {
+      
+    }
   }
 
   const {data:session}=useSession()
