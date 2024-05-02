@@ -76,6 +76,7 @@ const Page = () => {
       }
     } catch (error) {
       const axiosError=error as AxiosError<ApiResponse>
+      console.log(axiosError)
       toast({
         title:"Error",
         description:"Failed to fetch messages",

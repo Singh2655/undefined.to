@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Message } from "@/model/User";
 import { messageSchema } from "@/schemas/messageSchema";
 import * as z from "zod";
@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
@@ -27,8 +27,10 @@ import { useCompletion } from 'ai/react';
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useSession } from "next-auth/react";
 
-const specialChar="||"
+const specialChar="||";
+const message="User exists.";
 
 const parseStringMessage=(messageString:string):string[]=>{
   return messageString.split(specialChar)
@@ -46,9 +48,27 @@ const Page = () => {
     api:'/api/suggest-messages',
     initialCompletion:initialMessageString,
   })
-
+  const router=useRouter()
+  const {data:session,status}=useSession()
   const params = useParams<{ username: string }>();
   const username = params.username;
+
+  useEffect(()=>{
+    async function getdata(){
+      try {
+        const resposne=await axios.get(`/api/find-user?username=${username}`)
+        if(resposne.data.message!==message){
+          router.replace('/')
+        }
+      } catch (error) {
+        const axiosError=error as AxiosError<ApiResponse>
+        console.log(axiosError)
+      }
+    }
+    getdata()
+  },[])
+
+
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const form = useForm({
@@ -60,6 +80,24 @@ const Page = () => {
 
 const handleClick=(message:string)=>{
   form.setValue('content',message)
+}
+const addFollowing=async()=>{
+  try {
+    const response=await axios.post('/api/get-following',{
+      username
+    })
+    toast({
+      title:response.data.message
+    })
+  } catch (error) {
+    const axiosError=error as AxiosError<ApiResponse>
+    console.log(axiosError)
+    toast({
+      title:"Failed",
+      description:axiosError.message||"Something went wrong,Please try again!!",
+      variant:"destructive"
+    })
+  }
 }
   async function onSubmit(data: z.infer<typeof messageSchema>){
     setIsLoading(true)
@@ -104,9 +142,16 @@ const handleClick=(message:string)=>{
   }
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
+      <div className="">
      <h1 className="text-4xl font-bold mb-6 text-center">
         Public Profile Link
       </h1>
+      <div className="">
+      {session && (session.user.username!==username) && (
+        <Button onClick={addFollowing}>follow</Button>
+      )}
+      </div>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField

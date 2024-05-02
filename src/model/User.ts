@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
   content: string;
-  isAnswered:boolean;
-  answer:string;
+  isAnswered: boolean;
+  answer: string;
   createdAt: Date;
 }
 
@@ -12,14 +12,14 @@ const MessageSchema: Schema<Message> = new Schema({
     type: String,
     required: true,
   },
-  isAnswered:{
-    type:Boolean,
-    required:true,
-    default:false,
+  isAnswered: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
-  answer:{
-    type:String,
-    required:false,
+  answer: {
+    type: String,
+    required: false,
   },
   createdAt: {
     type: Date,
@@ -37,6 +37,7 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessage: boolean;
   messages: Message[];
+  followedUser: string[];
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -72,7 +73,15 @@ const UserSchema: Schema<User> = new Schema({
     type: Boolean,
     default: false,
   },
-  messages: [MessageSchema],
+  messages: {
+    type: [MessageSchema],
+    default: [],
+  },
+  followedUser: {
+    type: [String],
+    required: true,
+    default: [],
+  },
 });
 
 const UserModel =
