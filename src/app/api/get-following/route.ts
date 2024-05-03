@@ -24,11 +24,12 @@ export async function GET(req: Request) {
 
   const userId = new mongoose.Types.ObjectId(user._id);
   try {
-    const followedUser = await UserModel.aggregate([
+    const response = await UserModel.aggregate([
       { $match: { _id: userId } },
-      { $project: { _id: 0, following: 1 } },
+      { $project: { _id: 0, followedUser: 1 } },
     ]).exec();
-    console.log(followedUser)
+    const followedUser=response?response[0]?.followedUser:[]
+    console.log("followedUser",followedUser)
     return Response.json(
       {
         success: true,
@@ -53,16 +54,74 @@ export async function GET(req: Request) {
 }
 
 
-export async function POST(req:Request){
+// export async function POST(req:Request){
+//   await dbConnect();
+//   const session = await getServerSession(authOptions);
+//   const user = session?.user;
+//   const {username}=await req.json()
+//   if (!session || !user) {
+//     return Response.json(
+//       {
+//         success: false,
+//         message: "Not Authincated.",
+//       },
+//       {
+//         status: 401,
+//       }
+//     );
+//   }
+
+//   if(session.user.username===username){
+//     return Response.json(
+//       {
+//         success:false,
+//         message:"Can't follow yourself"
+//       },
+//       {
+//         status:400
+//       }
+//     )
+//   }
+//   const userId = new mongoose.Types.ObjectId(user._id);
+//   try {
+//     await UserModel.updateOne(
+//       { _id: userId },
+//       { $push: { followedUser: username } }
+//     );
+    
+//     return Response.json(
+//       {
+//         success: true,
+//         message:"Followed user successfully",
+//       },
+//       {
+//         status: 200,
+//       }
+//     );
+//   } catch (error) {
+//     console.log("failed to follow the user", error);
+//     return Response.json(
+//       {
+//         success: false,
+//         message: "failed to follow the user",
+//       },
+//       {
+//         status: 500,
+//       }
+//     );
+//   }
+// }
+
+export async function POST(req: Request) {
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user = session?.user;
-  const {username}=await req.json()
+  const { username } = await req.json();
   if (!session || !user) {
     return Response.json(
       {
         success: false,
-        message: "Not Authincated.",
+        message: "Not Authenticated.",
       },
       {
         status: 401,
@@ -70,39 +129,53 @@ export async function POST(req:Request){
     );
   }
 
-  if(session.user.username===username){
+  if (session.user.username === username) {
     return Response.json(
       {
-        success:false,
-        message:"Can't follow yourself"
+        success: false,
+        message: "Can't follow yourself",
       },
       {
-        status:400
+        status: 400,
       }
-    )
+    );
   }
+
   const userId = new mongoose.Types.ObjectId(user._id);
   try {
-    await UserModel.updateOne(
-      { _id: userId },
-      { $push: { followedUser: username } }
+    const result = await UserModel.findOneAndUpdate(
+      { _id: userId, followedUser: { $ne: username } }, // Check if the username is not already in the followedUser array
+      { $addToSet: { followedUser: username } }, // Use $addToSet to add username if not already present
+      { new: true }
     );
-    
+
+    if (!result) {
+      return Response.json(
+        {
+          success: false,
+          message: "User is already followed",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     return Response.json(
       {
         success: true,
-        message:"Followed user successfully",
+        message: "Followed user successfully",
       },
       {
         status: 200,
       }
     );
   } catch (error) {
-    console.log("failed to follow the user", error);
+    console.log("Failed to follow the user", error);
     return Response.json(
       {
         success: false,
-        message: "failed to follow the user",
+        message: "Failed to follow the user",
       },
       {
         status: 500,

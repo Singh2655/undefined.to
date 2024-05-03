@@ -52,6 +52,7 @@ const Page = () => {
   const {data:session,status}=useSession()
   const params = useParams<{ username: string }>();
   const username = params.username;
+  const [isFollower,setIsFollower]=useState(false)
 
   useEffect(()=>{
     async function getdata(){
@@ -60,6 +61,13 @@ const Page = () => {
         if(resposne.data.message!==message){
           router.replace('/')
         }
+        const followedUserRes=await axios.get('/api/get-following')
+        const followedUser=followedUserRes.data.followedUser;
+        followedUser.map((user,idx)=>{
+          if(user===username){
+            setIsFollower(true)
+          }
+        })
       } catch (error) {
         const axiosError=error as AxiosError<ApiResponse>
         console.log(axiosError)
@@ -89,6 +97,7 @@ const addFollowing=async()=>{
     toast({
       title:response.data.message
     })
+    router.refresh()
   } catch (error) {
     const axiosError=error as AxiosError<ApiResponse>
     console.log(axiosError)
@@ -142,15 +151,15 @@ const addFollowing=async()=>{
   }
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
-      <div className="">
-     <h1 className="text-4xl font-bold mb-6 text-center">
-        Public Profile Link
-      </h1>
-      <div className="">
-      {session && (session.user.username!==username) && (
-        <Button onClick={addFollowing}>follow</Button>
-      )}
-      </div>
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold text-center">
+          Public Profile Link
+        </h1>
+        <div className="flex justify-center">
+          {session && (session.user.username!==username) && (!isFollower) && (
+            <Button onClick={addFollowing}>Follow</Button>
+          )}
+        </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -196,11 +205,11 @@ const addFollowing=async()=>{
           </Button>
           <p>Click on any message below to select it.</p>
         </div>
-        <Card>
-          <CardHeader>
+        <Card >
+          <CardHeader >
             <h3 className="text-xl font-semibold">Messages</h3>
           </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
+          <CardContent  className="flex flex-col space-y-4 overflow-y-auto max-h-72">
             {error ? (
               <p className="text-red-500">{error.message}</p>
             ) : (
@@ -208,7 +217,7 @@ const addFollowing=async()=>{
                 <Button
                   key={index}
                   variant="outline"
-                  className="mb-2"
+                  className="mb-2 w-[550px] md:w-full"
                   onClick={() => handleClick(message)}
                 >
                   {message}
@@ -218,13 +227,13 @@ const addFollowing=async()=>{
           </CardContent>
         </Card>
       </div>
-      <Separator className="my-6" />
-      <div className="text-center">
+       <Separator className="my-6" />
+       {!session &&<div className="text-center">
         <div className="mb-4">Get Your Message Board</div>
         <Link href={'/sign-up'}>
           <Button>Create Your Account</Button>
         </Link>
-      </div>
+      </div>}
     </div>
   );
 };

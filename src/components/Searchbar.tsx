@@ -58,9 +58,9 @@ const Searchbar = () => {
   },[startsWith])
   return (
     <Command
-      className="relative rounded-lg max-w-lg z-50 overflow-visible" ref={commandRef}
+      className="relative rounded-lg w-[250px] md:max-w-lg z-50 overflow-visible md:mb-0" ref={commandRef}
     >
-      <Input className="outline-none border-none focus:border-none focus:outline-none ring-0"
+      <Input className="outline-none border-none focus:border-none focus:outline-none ring-0 "
         value={name} onChange={e=>{
         setName(e.target.value)
         debounced(e.target.value)}} placeholder="Type a command or search..." />
