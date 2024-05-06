@@ -299,7 +299,7 @@ const Page = () => {
   );
 };
 
-export function SkeletonPublicProfile() {
+function SkeletonPublicProfile() {
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
       <div className="mb-4 flex justify-between">
