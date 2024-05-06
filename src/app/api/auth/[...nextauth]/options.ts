@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Password is incorrect");
         } catch (error) {
           console.log("[NEXTAUTH_ERROR]", error);
+          throw new Error('incorrect password')
         }
       },
     }),
@@ -57,11 +58,11 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  pages: {
-    signIn: "/sign-in",
-  },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECERT,
+  pages: {
+    signIn: "/sign-in",
+  },
 };

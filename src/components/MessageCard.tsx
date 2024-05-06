@@ -192,7 +192,7 @@ import { Textarea } from "./ui/textarea";
 import { ApiResponse } from "@/types/ApiResponse";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
@@ -231,6 +231,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
      toast({
       title: response.data.message,
     });
+    DialogPrimitive.Close
    } catch (error) {
     const axiosError = error as AxiosError<ApiResponse>;
       toast({

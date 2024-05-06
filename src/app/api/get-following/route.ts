@@ -144,8 +144,8 @@ export async function POST(req: Request) {
   const userId = new mongoose.Types.ObjectId(user._id);
   try {
     const result = await UserModel.findOneAndUpdate(
-      { _id: userId, followedUser: { $ne: username } }, // Check if the username is not already in the followedUser array
-      { $addToSet: { followedUser: username } }, // Use $addToSet to add username if not already present
+      { _id: userId, followedUser: { $ne: username } },
+      { $addToSet: { followedUser: username } },
       { new: true }
     );
 

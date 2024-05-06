@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -53,7 +52,7 @@ const Page = () => {
   };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+      <div className="w-[350px] md:w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Join Undefined.to

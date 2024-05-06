@@ -73,6 +73,7 @@ const Navbar = () => {
   const {toast}=useToast()
   const [followedUser,setFollowedUser]=useState([])
   useEffect(()=>{
+    if(session){
     const fetchFollowing=async()=>{
       try {
         const response=await axios.get('/api/get-following')
@@ -88,11 +89,12 @@ const Navbar = () => {
       }
     }
     fetchFollowing()
-  },[])
+  }
+  },[session])
   const handleFollowList=(value:string)=>{
     router.replace(`/u/${value}`)
   }
-  const skeletonContent = <Skeleton className="h-8 w-20 md:w-32 opacity-50" />;
+  const skeletonContent = <Skeleton className="h-10 w-[70px] opacity-50" />;
   return (
     <nav className="bg-gray-800 text-white py-4 px-6">
       <div className="flex items-center justify-between flex-wrap"> 

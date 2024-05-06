@@ -58,12 +58,12 @@ const Searchbar = () => {
   },[startsWith])
   return (
     <Command
-      className="relative rounded-lg w-[250px] md:max-w-lg z-50 overflow-visible md:mb-0" ref={commandRef}
+      className="relative rounded-lg w-[200px] md:max-w-lg z-50 overflow-visible md:mb-0" ref={commandRef}
     >
       <Input className="outline-none border-none focus:border-none focus:outline-none ring-0 "
         value={name} onChange={e=>{
         setName(e.target.value)
-        debounced(e.target.value)}} placeholder="Type a command or search..." />
+        debounced(e.target.value)}} placeholder="search users..." />
       {(users.length ?? 0) > 0 ? <CommandList className="absolute bg-white top-full inset-x-0 rounded-b-md shadow border border-gray-200">
       {(users.length===0) && <CommandEmpty>No results found.</CommandEmpty>}
         <CommandGroup heading="users">
