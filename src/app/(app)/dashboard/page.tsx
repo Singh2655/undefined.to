@@ -118,7 +118,7 @@ const Page = () => {
   if (!session || !session.user) {
     return (
       <h1 className="flex h-full w-full justify-center items-center">
-        Please login...
+        loading...
       </h1>
     );
   }

@@ -20,8 +20,12 @@ import { Input } from "./ui/input";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { useRouter } from "next/navigation";
 
+interface User {
+  username: string;
+}
+
 const Searchbar = () => {
-  const [users, setUsers] = useState<string[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [startsWith, setStartsWith] = useState("");
   const router = useRouter();
   const [name, setName] = useState("");
@@ -41,7 +45,7 @@ const Searchbar = () => {
           const response = await axios.get(
             `/api/search-users?startsWith=${startsWith}`
           );
-          //console.log("this is response",response.data.allUser)
+          console.log("this is response of allUsers",response.data.allUser)
           setUsers(response.data.allUser);
           //console.log("users",users)
         };
