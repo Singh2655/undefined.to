@@ -53,64 +53,6 @@ export async function GET(req: Request) {
   }
 }
 
-// export async function POST(req:Request){
-//   await dbConnect();
-//   const session = await getServerSession(authOptions);
-//   const user = session?.user;
-//   const {username}=await req.json()
-//   if (!session || !user) {
-//     return Response.json(
-//       {
-//         success: false,
-//         message: "Not Authincated.",
-//       },
-//       {
-//         status: 401,
-//       }
-//     );
-//   }
-
-//   if(session.user.username===username){
-//     return Response.json(
-//       {
-//         success:false,
-//         message:"Can't follow yourself"
-//       },
-//       {
-//         status:400
-//       }
-//     )
-//   }
-//   const userId = new mongoose.Types.ObjectId(user._id);
-//   try {
-//     await UserModel.updateOne(
-//       { _id: userId },
-//       { $push: { followedUser: username } }
-//     );
-
-//     return Response.json(
-//       {
-//         success: true,
-//         message:"Followed user successfully",
-//       },
-//       {
-//         status: 200,
-//       }
-//     );
-//   } catch (error) {
-//     //console.log("failed to follow the user", error);
-//     return Response.json(
-//       {
-//         success: false,
-//         message: "failed to follow the user",
-//       },
-//       {
-//         status: 500,
-//       }
-//     );
-//   }
-// }
-
 export async function POST(req: Request) {
   await dbConnect();
   const session = await getServerSession(authOptions);

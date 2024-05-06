@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import messagesSuggestion from "@/message-suggestion.json";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const specialChar = "||";
 const message = "User exists.";
@@ -56,6 +57,7 @@ const Page = () => {
   const params = useParams<{ username: string }>();
   const username = params.username;
   const [isFollower, setIsFollower] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [messageCard, setMessageCard] = useState([]);
 
   useEffect(() => {
@@ -65,14 +67,15 @@ const Page = () => {
         if (resposne.data.message !== message) {
           router.replace("/");
         }
-        if (session) {
+        if(session){
           const followedUserRes = await axios.get("/api/get-following");
           const followedUser = followedUserRes.data.followedUser;
-          followedUser.map((user:string) => {
+          followedUser.map((user: string) => {
             if (user === username) {
               setIsFollower(true);
             }
           });
+          setIsMounted(true)
         }
         const content = await axios.get(
           `/api/get-answered-messages?username=${username}`
@@ -85,7 +88,9 @@ const Page = () => {
       }
     }
     getdata();
-  }, []);
+  }, [session]);
+
+  
 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -99,8 +104,9 @@ const Page = () => {
   const handleClick = (message: string) => {
     form.setValue("content", message);
   };
-
+  const [followLoadind, setFollowLoadind] = useState(false)
   const addFollowing = async () => {
+    setFollowLoadind(true)
     try {
       const response = await axios.post("/api/get-following", {
         username,
@@ -118,6 +124,23 @@ const Page = () => {
           axiosError.message || "Something went wrong,Please try again!!",
         variant: "destructive",
       });
+    }finally{
+      setFollowLoadind(false)
+    }
+  };
+  const removeFollowing = async () => {
+    
+    try {
+      const response=await axios.post(`/api/unfollow?username=${username}`)
+      setIsFollower(false)
+      toast({
+        title:response.data.message
+      })
+    } catch (error) {
+      const axiosError=error as AxiosError<ApiResponse>
+      toast({
+        title:axiosError.response?.data.message||`failed to unfollow ${username} `
+      })
     }
   };
   async function onSubmit(data: z.infer<typeof messageSchema>) {
@@ -164,19 +187,28 @@ const Page = () => {
     //console.log(suggestion);
     form.setValue("content", suggestion);
   };
+  if (!session) {
+    return <SkeletonPublicProfile />;
+  }
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
-      <div className="mb-6">
+      <div className="mb-4 flex justify-between">
         <h1 className="text-4xl font-bold text-center">Public Profile Link</h1>
-        <div className="flex justify-center">
-          {session && session.user.username !== username && !isFollower && (
-            <Button onClick={addFollowing}>Follow</Button>
+        <div className="flex justify-center ">
+          {isMounted && session.user.username !== username && (
+            <div className="">
+              {!isFollower ? (
+                <Button onClick={addFollowing}>Follow</Button>
+              ) : (
+                <Button onClick={removeFollowing}>unfollow</Button>
+              )}
+            </div>
           )}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {(messageCard.length ?? 0) > 0 &&
-          messageCard.map((message:z.infer<typeof messageSchema>, index) => (
+          messageCard.map((message: z.infer<typeof messageSchema>, index) => (
             <div
               className="bg-white border border-gray-200 rounded-lg overflow-hidden"
               key={index}
@@ -266,5 +298,87 @@ const Page = () => {
     </div>
   );
 };
+
+export function SkeletonPublicProfile() {
+  return (
+    <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
+      <div className="mb-4 flex justify-between">
+        <h1 className="text-4xl font-bold text-center">
+          <Skeleton className="h-10 w-60" />
+        </h1>
+        <div className="flex justify-center">
+          <SkeletonButton />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+      <div className="mt-5">
+        <SkeletonForm />
+      </div>
+      <div className="space-y-4 my-8">
+        <div className="space-y-2">
+          <SkeletonButton />
+          <SkeletonText />
+        </div>
+        <SkeletonCard />
+      </div>
+      <div className="my-6">
+        <SkeletonText />
+      </div>
+      <div className="text-center">
+        <div className="mb-4">
+          <SkeletonText />
+        </div>
+        <SkeletonButton />
+      </div>
+    </div>
+  );
+}
+
+
+function SkeletonCard() {
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="p-4">
+        <Skeleton className="h-6 w-full mb-2" />
+        <Skeleton className=" h-28 w-full" />
+      </div>
+    </div>
+  );
+}
+
+function SkeletonForm() {
+  return (
+    <div className="p-6 space-y-6">
+      <SkeletonFormField />
+      <SkeletonFormField />
+      <SkeletonButton />
+    </div>
+  );
+}
+
+function SkeletonFormField() {
+  return (
+    <div className="space-y-2">
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-24 w-full" />
+    </div>
+  );
+}
+
+function SkeletonButton() {
+  return (
+    <Skeleton className="h-10 w-28" />
+  );
+}
+
+function SkeletonText() {
+  return (
+    <Skeleton className="h-6 w-40" />
+  );
+}
 
 export default Page;
