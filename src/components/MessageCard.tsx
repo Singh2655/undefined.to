@@ -68,7 +68,7 @@
 //     }
 //   };
 //   const handleAnswer=async()=>{
-//     console.log("this is messageID",message._id)
+//     //console.log("this is messageID",message._id)
 //    try {
 //      const response=await axios.post('/api/answer-message',{
 //        answer,
@@ -151,7 +151,6 @@
 
 // export default MessageCard;
 
-
 import {
   Card,
   CardContent,
@@ -192,7 +191,7 @@ import { Textarea } from "./ui/textarea";
 import { ApiResponse } from "@/types/ApiResponse";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
@@ -200,7 +199,7 @@ type MessageCardProps = {
 const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   const { toast } = useToast();
   const router = useRouter();
-  const [answer,setAnswer]=useState("")
+  const [answer, setAnswer] = useState("");
   const handleDeleteConfirm = async () => {
     try {
       const response = await axios.delete<ApiResponse>(
@@ -221,27 +220,27 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
       });
     }
   };
-  const handleAnswer=async()=>{
-    console.log("this is messageID",message._id)
-   try {
-     const response=await axios.post('/api/answer-message',{
-       answer,
-       messageId:message._id
-     })
-     toast({
-      title: response.data.message,
-    });
-    DialogPrimitive.Close
-   } catch (error) {
-    const axiosError = error as AxiosError<ApiResponse>;
+  const handleAnswer = async () => {
+    //console.log("this is messageID",message._id)
+    try {
+      const response = await axios.post("/api/answer-message", {
+        answer,
+        messageId: message._id,
+      });
+      toast({
+        title: response.data.message,
+      });
+      DialogPrimitive.Close;
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
       toast({
         title: "Error",
         description:
           axiosError.response?.data.message ?? "Failed to delete message",
         variant: "destructive",
       });
-   }
-  }
+    }
+  };
   return (
     <Card className="card-bordered">
       <CardHeader>
@@ -270,7 +269,9 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
             </AlertDialog>
             {message.isAnswered ? (
               <Dialog>
-                <DialogTrigger><MailCheck /></DialogTrigger>
+                <DialogTrigger>
+                  <MailCheck />
+                </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Your answer!!</DialogTitle>
@@ -282,12 +283,19 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
               </Dialog>
             ) : (
               <Dialog>
-                <DialogTrigger><MailPlus/></DialogTrigger>
+                <DialogTrigger>
+                  <MailPlus />
+                </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="mb-4">{message.content}</DialogTitle>
+                    <DialogTitle className="mb-4">
+                      {message.content}
+                    </DialogTitle>
                     <DialogDescription>
-                      <Textarea onChange={(e)=>setAnswer(e.target.value)}  placeholder="Type your message here." />
+                      <Textarea
+                        onChange={(e) => setAnswer(e.target.value)}
+                        placeholder="Type your message here."
+                      />
                     </DialogDescription>
                   </DialogHeader>
                   <Button onClick={handleAnswer}>submit</Button>

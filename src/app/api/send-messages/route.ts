@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const { username, content } = await req.json();
 
   try {
-    const user = await UserModel.findOne({username}).exec();
+    const user = await UserModel.findOne({ username }).exec();
     if (!user) {
       return Response.json(
         {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         }
       );
     }
-  
+
     if (!user.isAcceptingMessage) {
       return Response.json(
         {
@@ -32,22 +32,27 @@ export async function POST(req: Request) {
       );
     }
 
-    const newMessage={content,createdAt:new Date(),isAnswered:false,answer:""}
+    const newMessage = {
+      content,
+      createdAt: new Date(),
+      isAnswered: false,
+      answer: "",
+    };
 
-    user.messages.push(newMessage as Message)
-    await user.save()
+    user.messages.push(newMessage as Message);
+    await user.save();
 
     return Response.json(
-        {
-          success: true,
-          message: "Message sent successfully.",
-        },
-        {
-          status: 200,
-        }
-      );
+      {
+        success: true,
+        message: "Message sent successfully.",
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
-    console.log("failed to send message to user", error);
+    //console.log("failed to send message to user", error);
     return Response.json(
       {
         success: false,

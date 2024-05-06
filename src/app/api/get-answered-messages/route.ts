@@ -18,15 +18,15 @@ export async function GET(req: Request) {
     const queryParams = {
       username: searchParams.get("username"),
     };
-    console.log("get answered username", queryParams.username);
+    //console.log("get answered username", queryParams.username);
     const response = await UserModel.aggregate([
-      {$match:{username:queryParams.username}},
+      { $match: { username: queryParams.username } },
       { $unwind: "$messages" },
       { $match: { "messages.isAnswered": true } },
       {
         $project: {
           _id: 0,
-          content: "$messages.content", 
+          content: "$messages.content",
           answer: "$messages.answer",
           createdAt: "$messages.createdAt",
         },
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       }
     );
   } catch (error) {
-    console.log("failed to fetch the content", error);
+    //console.log("failed to fetch the content", error);
     return Response.json(
       {
         success: false,

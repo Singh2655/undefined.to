@@ -18,11 +18,11 @@ export async function POST(req: Request) {
 
     const { messages } = await req.json();
     const response = await openai.completions.create({
-        model: 'gpt-3.5-turbo-instruct',
-        max_tokens: 400,
-        stream: true,
-        prompt,
-      });
+      model: "gpt-3.5-turbo-instruct",
+      max_tokens: 400,
+      stream: true,
+      prompt,
+    });
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response);
@@ -41,6 +41,6 @@ export async function POST(req: Request) {
         { status }
       );
     }
-    console.log("unexpected error occured");
+    //console.log("unexpected error occured");
   }
 }

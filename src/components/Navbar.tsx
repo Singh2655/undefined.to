@@ -67,49 +67,56 @@ import { cn } from "@/lib/utils";
 const Navbar = () => {
   const { data: session, status } = useSession();
   const user: User = session?.user as User;
-  const router=useRouter()
-  console.log(user)
+  const router = useRouter();
+  //console.log(user)
   // Skeleton for loading state
-  const {toast}=useToast()
-  const [followedUser,setFollowedUser]=useState([])
-  useEffect(()=>{
-    if(session){
-    const fetchFollowing=async()=>{
-      try {
-        const response=await axios.get('/api/get-following')
-        console.log("followedUser response",response.data)
-        setFollowedUser(response.data.followedUser)
-      } catch (error) {
-        const axiosError=error as AxiosError<ApiResponse>
-        toast({
-          title:"Failed",
-          description:axiosError.message||"Failed to fetch following list",
-          variant:"destructive"
-        })
-      }
+  const { toast } = useToast();
+  const [followedUser, setFollowedUser] = useState([]);
+  useEffect(() => {
+    if (session) {
+      const fetchFollowing = async () => {
+        try {
+          const response = await axios.get("/api/get-following");
+          //console.log("followedUser response",response.data)
+          setFollowedUser(response.data.followedUser);
+        } catch (error) {
+          const axiosError = error as AxiosError<ApiResponse>;
+          toast({
+            title: "Failed",
+            description: axiosError.message || "Failed to fetch following list",
+            variant: "destructive",
+          });
+        }
+      };
+      fetchFollowing();
     }
-    fetchFollowing()
-  }
-  },[session])
-  const handleFollowList=(value:string)=>{
-    router.replace(`/u/${value}`)
-  }
+  }, [session]);
+  const handleFollowList = (value: string) => {
+    router.replace(`/u/${value}`);
+  };
   const skeletonContent = <Skeleton className="h-10 w-[70px] opacity-50" />;
   return (
     <nav className="bg-gray-800 text-white py-4 px-6">
-      <div className="flex items-center justify-between flex-wrap"> 
-        <Sheet key="left"> 
+      <div className="flex items-center justify-between flex-wrap">
+        <Sheet key="left">
           <SheetTrigger asChild>
             <Menu className="cursor-pointer" />
           </SheetTrigger>
-          <SheetContent side="left" className="bg-white border border-gray-300 rounded-md shadow-lg p-4">
+          <SheetContent
+            side="left"
+            className="bg-white border border-gray-300 rounded-md shadow-lg p-4"
+          >
             <SheetHeader className="mb-4">
               <SheetTitle className="text-lg font-bold">Following</SheetTitle>
             </SheetHeader>
             {followedUser && followedUser.length > 0 ? (
               <ul className="divide-y divide-gray-200">
                 {followedUser.map((value, idx) => (
-                  <li onMouseDown={()=>handleFollowList(value)} key={idx} className="py-2 cursor-pointer">
+                  <li
+                    onMouseDown={() => handleFollowList(value)}
+                    key={idx}
+                    className="py-2 cursor-pointer"
+                  >
                     <span className="text-gray-700">{value}</span>
                   </li>
                 ))}
@@ -120,11 +127,11 @@ const Navbar = () => {
           </SheetContent>
         </Sheet>
 
-        <a href="/" className="text-xl font-bold mr-4"> 
+        <a href="/" className="text-xl font-bold mr-4">
           Welcome to Undefined.to
         </a>
-        
-        <Searchbar/> 
+
+        <Searchbar />
 
         <div className="flex items-center space-x-4">
           {status === "loading" ? (
@@ -143,7 +150,7 @@ const Navbar = () => {
               </Button>
             </Link>
           )}
-          {session && <Button onClick={() => signOut()}>Logout</Button>} 
+          {session && <Button onClick={() => signOut()}>Logout</Button>}
         </div>
       </div>
     </nav>

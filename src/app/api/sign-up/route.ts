@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   await dbConnect();
   try {
     const { username, email, password } = await req.json();
-    console.log("registering user...");
+    //console.log("registering user...");
     const existingVerifiedUserByUsername = await UserModel.findOne({
       username,
       isVerified: true,

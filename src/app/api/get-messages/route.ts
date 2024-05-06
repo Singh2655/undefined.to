@@ -52,7 +52,7 @@ export async function GET(req: Request) {
       }
     );
   } catch (error) {
-    console.log("failed to update user status to accept message", error);
+    //console.log("failed to update user status to accept message", error);
     return Response.json(
       {
         success: false,

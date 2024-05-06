@@ -30,36 +30,36 @@ export async function DELETE(
       { _id: user._id },
       { $pull: { messages: { _id: messageId } } }
     );
-    if(updatedResponse.modifiedCount===0){
-        return Response.json(
-            {
-              success: false,
-              message: "Message not found or already deleted.",
-            },
-            {
-              status: 404,
-            }
-          );
-    }
-    return Response.json(
-        {
-          success: true,
-          message: "Message deleted.",
-        },
-        {
-          status: 200,
-        }
-      );
-  } catch (error) {
-    console.log("error deleting message",error)
-    return Response.json(
+    if (updatedResponse.modifiedCount === 0) {
+      return Response.json(
         {
           success: false,
-          message: "Error deleting message.",
+          message: "Message not found or already deleted.",
         },
         {
-          status: 500,
+          status: 404,
         }
       );
+    }
+    return Response.json(
+      {
+        success: true,
+        message: "Message deleted.",
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    //console.log("error deleting message",error)
+    return Response.json(
+      {
+        success: false,
+        message: "Error deleting message.",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

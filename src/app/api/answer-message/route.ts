@@ -7,8 +7,8 @@ import mongoose from "mongoose";
 
 export async function POST(req: Request) {
   await dbConnect();
-  const {messageId,answer}=await req.json()
-  console.log(messageId)
+  const { messageId, answer } = await req.json();
+  //console.log(messageId)
   const session = await getServerSession(authOptions);
   const user = session?.user;
   if (!session || !user) {
@@ -23,15 +23,15 @@ export async function POST(req: Request) {
     );
   }
   const userId = new mongoose.Types.ObjectId(user._id);
-  const dbUser=await UserModel.findOne({
-    _id:userId
-  })
+  const dbUser = await UserModel.findOne({
+    _id: userId,
+  });
   try {
     const response = await UserModel.aggregate([
       {
         $match: {
-          _id:new mongoose.Types.ObjectId(userId)
-        }
+          _id: new mongoose.Types.ObjectId(userId),
+        },
       },
       // Filter the messages array to include only the message with the given messageId
       {
@@ -40,22 +40,24 @@ export async function POST(req: Request) {
             $filter: {
               input: "$messages",
               as: "msg",
-              cond: { $eq: ["$$msg._id",new mongoose.Types.ObjectId(messageId)] }
-            }
-          }
-        }
+              cond: {
+                $eq: ["$$msg._id", new mongoose.Types.ObjectId(messageId)],
+              },
+            },
+          },
+        },
       },
       // Unwind the message array to flatten the result
       {
-        $unwind: "$message"
+        $unwind: "$message",
       },
       // Project to reshape the output and exclude unnecessary fields
       {
         $project: {
           _id: 0,
-          message: "$message"
-        }
-      }
+          message: "$message",
+        },
+      },
     ]).exec();
 
     if (!response || !response.length) {
@@ -69,27 +71,27 @@ export async function POST(req: Request) {
         }
       );
     }
-    const message=response[0].message as Message
-    console.log(message)
-    message.isAnswered=true;
-    message.answer=answer;
+    const message = response[0].message as Message;
+    //console.log(message)
+    message.isAnswered = true;
+    message.answer = answer;
     await UserModel.updateOne(
       { _id: user._id },
       { $pull: { messages: { _id: messageId } } }
     );
-    dbUser?.messages.push(message)
-    dbUser?.save()
+    dbUser?.messages.push(message);
+    dbUser?.save();
     return Response.json(
       {
-        success:true,
-        message:"You've answered the question successfully!!",
-        
-      },{
-        status:200
+        success: true,
+        message: "You've answered the question successfully!!",
+      },
+      {
+        status: 200,
       }
-    )
+    );
   } catch (error) {
-    console.log("failed to answer message ", error);
+    //console.log("failed to answer message ", error);
     return Response.json(
       {
         success: false,

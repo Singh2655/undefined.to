@@ -77,11 +77,11 @@ const Page = () => {
         const content = await axios.get(
           `/api/get-answered-messages?username=${username}`
         );
-        // console.log(content.data.response);
+        // //console.log(content.data.response);
         setMessageCard(content.data.response);
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
-        // console.log(axiosError);
+        // //console.log(axiosError);
       }
     }
     getdata();
@@ -111,7 +111,7 @@ const Page = () => {
       router.refresh();
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
-      console.log(axiosError);
+      //console.log(axiosError);
       toast({
         title: "Failed",
         description:
@@ -134,7 +134,7 @@ const Page = () => {
       form.reset({ ...form.getValues(), content: "" });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
-      console.log("failed to send message");
+      //console.log("failed to send message");
       toast({
         title: "Failed",
         description:
@@ -152,7 +152,7 @@ const Page = () => {
     //   complete("");
     // } catch (error) {
     //   const axiosError = error as AxiosError<ApiResponse>;
-    //   console.log("failed to send message");
+    //   //console.log("failed to send message");
     //   toast({
     //     title: "Failed",
     //     description:
@@ -161,7 +161,7 @@ const Page = () => {
     //   });
     // }
     const suggestion = messagesSuggestion[Math.round(Math.random() * 100)];
-    console.log(suggestion);
+    //console.log(suggestion);
     form.setValue("content", suggestion);
   };
   return (

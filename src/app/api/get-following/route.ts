@@ -28,8 +28,8 @@ export async function GET(req: Request) {
       { $match: { _id: userId } },
       { $project: { _id: 0, followedUser: 1 } },
     ]).exec();
-    const followedUser=response?response[0]?.followedUser:[]
-    console.log("followedUser",followedUser)
+    const followedUser = response ? response[0]?.followedUser : [];
+    //console.log("followedUser",followedUser)
     return Response.json(
       {
         success: true,
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
       }
     );
   } catch (error) {
-    console.log("failed to update user status to accept message", error);
+    //console.log("failed to update user status to accept message", error);
     return Response.json(
       {
         success: false,
@@ -52,7 +52,6 @@ export async function GET(req: Request) {
     );
   }
 }
-
 
 // export async function POST(req:Request){
 //   await dbConnect();
@@ -88,7 +87,7 @@ export async function GET(req: Request) {
 //       { _id: userId },
 //       { $push: { followedUser: username } }
 //     );
-    
+
 //     return Response.json(
 //       {
 //         success: true,
@@ -99,7 +98,7 @@ export async function GET(req: Request) {
 //       }
 //     );
 //   } catch (error) {
-//     console.log("failed to follow the user", error);
+//     //console.log("failed to follow the user", error);
 //     return Response.json(
 //       {
 //         success: false,
@@ -171,7 +170,7 @@ export async function POST(req: Request) {
       }
     );
   } catch (error) {
-    console.log("Failed to follow the user", error);
+    //console.log("Failed to follow the user", error);
     return Response.json(
       {
         success: false,
