@@ -68,7 +68,7 @@ const Page = () => {
         if (session) {
           const followedUserRes = await axios.get("/api/get-following");
           const followedUser = followedUserRes.data.followedUser;
-          followedUser.map((user, idx) => {
+          followedUser.map((user:string) => {
             if (user === username) {
               setIsFollower(true);
             }
@@ -176,7 +176,7 @@ const Page = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {(messageCard.length ?? 0) > 0 &&
-          messageCard.map((message, index) => (
+          messageCard.map((message:z.infer<typeof messageSchema>, index) => (
             <div
               className="bg-white border border-gray-200 rounded-lg overflow-hidden"
               key={index}
