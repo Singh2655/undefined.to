@@ -111,7 +111,7 @@ const Navbar = () => {
             </SheetHeader>
             {followedUser && followedUser.length > 0 ? (
               <ul className="divide-y divide-gray-200">
-                {followedUser.map((value, idx) => (
+                {followedUser.map((value:string, idx) => (
                   <li
                     onMouseDown={() => handleFollowList(value)}
                     key={idx}
