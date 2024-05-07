@@ -59,6 +59,7 @@ const Page = () => {
   const [isFollower, setIsFollower] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [messageCard, setMessageCard] = useState([]);
+  const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
     async function getdata() {
@@ -80,7 +81,8 @@ const Page = () => {
         const content = await axios.get(
           `/api/get-answered-messages?username=${username}`
         );
-        // //console.log(content.data.response);
+        // //console.log(content.data.response)
+        setIsFetched(true);
         setMessageCard(content.data.response);
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
@@ -187,13 +189,13 @@ const Page = () => {
     //console.log(suggestion);
     form.setValue("content", suggestion);
   };
-  if (!session) {
+  if (!session || !session.user || !isFetched) {
     return <SkeletonPublicProfile />;
   }
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
       <div className="mb-4 flex justify-between">
-        <h1 className="text-4xl font-bold text-center">Public Profile Link</h1>
+        <h3 className="text-3xl font-bold text-center">Public Profile Link</h3>
         <div className="flex justify-center ">
           {isMounted && session.user.username !== username && (
             <div className="">

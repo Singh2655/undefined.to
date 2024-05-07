@@ -3,6 +3,7 @@
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { Message } from "@/model/User";
@@ -116,11 +117,7 @@ const Page = () => {
   };
 
   if (!session || !session.user) {
-    return (
-      <h1 className="flex h-full w-full justify-center items-center">
-        loading...
-      </h1>
-    );
+    return <SkeletonUserDashboard/>
   }
 
   const { username } = session.user;
@@ -134,9 +131,14 @@ const Page = () => {
       description: "url copied to clipboard successfully!!",
     });
   };
+  const handlePublicPage=()=>{
+    if(session){
+      router.replace(`/u/${username}`)
+    }
+  }
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-4 cursor-pointer" onMouseDown={handlePublicPage}>User Dashboard</h1>
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
@@ -194,5 +196,86 @@ const Page = () => {
     </div>
   );
 };
+
+function SkeletonUserDashboard() {
+  return (
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+      <h1 className="text-4xl font-bold mb-4">
+        <Skeleton className="h-12 w-40" />
+      </h1>
+
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">
+          <Skeleton className="h-8 w-40" />
+        </h2>{" "}
+        <div className="flex items-center">
+          <SkeletonInput />
+          <SkeletonButton />
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <SkeletonSwitch />
+        <span className="ml-2">
+          <SkeletonText />
+        </span>
+      </div>
+      <SeparatorSkeleton />
+
+      <SkeletonButtonRefresh />
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SkeletonMessageCard />
+        <SkeletonMessageCard />
+      </div>
+    </div>
+  );
+}
+
+function SkeletonInput() {
+  return (
+    <Skeleton className="input input-bordered w-full p-2 mr-2" />
+  );
+}
+
+function SkeletonButton() {
+  return (
+    <Skeleton className="h-10 w-20" />
+  );
+}
+
+function SkeletonSwitch() {
+  return (
+    <Skeleton className="w-12 h-6" />
+  );
+}
+
+function SkeletonText() {
+  return (
+    <Skeleton className="h-6 w-20" />
+  );
+}
+
+function SeparatorSkeleton() {
+  return (
+    <Skeleton className="h-0.5 w-full my-4" />
+  );
+}
+
+function SkeletonButtonRefresh() {
+  return (
+    <Skeleton className="h-10 w-10" />
+  );
+}
+
+function SkeletonMessageCard() {
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="p-4">
+        <Skeleton className="h-6 w-full mb-2" />
+        <Skeleton className="h-16 w-full" />
+      </div>
+    </div>
+  );
+}
 
 export default Page;
