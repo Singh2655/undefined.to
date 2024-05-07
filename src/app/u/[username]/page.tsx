@@ -60,8 +60,10 @@ const Page = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [messageCard, setMessageCard] = useState([]);
   const [isFetched, setIsFetched] = useState(false);
+  const [messageSuggestion,setMessageSuggestion]=useState<string[]>([])
 
   useEffect(() => {
+    setMessageSuggestion(initialMessageString)
     async function getdata() {
       try {
         const resposne = await axios.get(`/api/find-user?username=${username}`);
@@ -185,9 +187,12 @@ const Page = () => {
     //     variant: "destructive",
     //   });
     // }
-    const suggestion = messagesSuggestion[Math.round(Math.random() * 100)];
+    setMessageSuggestion([])
+    const suggestion1 = messagesSuggestion[Math.round(Math.random() * 250)];
+    const suggestion2 = messagesSuggestion[Math.round(Math.random() * 250)];
+    const suggestion3 = messagesSuggestion[Math.round(Math.random() * 250)];
+    setMessageSuggestion([suggestion1,suggestion2,suggestion3])
     //console.log(suggestion);
-    form.setValue("content", suggestion);
   };
   if (!session || !session.user || !isFetched) {
     return <SkeletonPublicProfile />;
@@ -275,7 +280,7 @@ const Page = () => {
             <h3 className="text-xl font-semibold">Messages</h3>
           </CardHeader>
           <CardContent className="flex flex-col space-y-4 overflow-y-auto max-h-72">
-            {initialMessageString.map((message, index) => (
+            {messageSuggestion.map((message, index) => (
               <Button
                 key={index}
                 variant="outline"
